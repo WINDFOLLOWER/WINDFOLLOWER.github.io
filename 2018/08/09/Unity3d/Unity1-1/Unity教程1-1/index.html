@@ -15,7 +15,7 @@
     <meta name="description" content="">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>『译』Unity教程（1.1）——游戏对象和脚本 · Windy Town</title>
+    <title>『译』Unity教程1.1 游戏对象和脚本 · Windy Town</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -210,7 +210,7 @@
                 <a href="/" >Windy Town</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">『译』Unity教程（1.1）——游戏对象和脚本</a>
+                <a href="#" class="post-name">『译』Unity教程1.1 游戏对象和脚本</a>
             </div>
     </div>
     
@@ -242,7 +242,7 @@ height:40vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            『译』Unity教程（1.1）——游戏对象和脚本
+            『译』Unity教程1.1 游戏对象和脚本
             <!-- 404 -->
             
         </h1>
@@ -271,7 +271,7 @@ height:40vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">216</span> / Reading time: <span class="post-count">1 min</span></span>
+                        <span>Word count: <span class="post-count">499</span> / Reading time: <span class="post-count">2 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -401,10 +401,19 @@ height:40vh;
             <main class="main post-page">
     <article class="article-entry">
         <p>原教程地址: <a href="https://catlikecoding.com/unity/tutorials/" target="_blank" rel="noopener">CatlikeCoding</a><br>该版本翻译由 <a href="https://windfollower.github.io/">Wind_07</a> 提供<br>本翻译采用 <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">知识共享署名-非商业性使用 4.0 国际许可协议</a><br>转载请在<strong>显眼</strong>地方标注<strong>上述链接</strong></p>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><em>“ 使用简单的对象来制作一个时钟<br>编写简短的C#脚本代码来使得指针绕中心轴旋转<br>并准确驱动指针们转动 ”</em>   </p>
-<p>在本教程中，我们将创建一个简单的时钟，并对其组件（Component）进行编程来显示当前时间。你不需要对Unity有足够深入的了解，只需要打开Unity编辑器操作几分钟，知道怎么控制场景（Scene）窗口你就可以开始本教程了。</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
+<p>使用简单的对象来制作一个时钟<br>编写简短的C#脚本代码来使得指针绕中心轴旋转<br>并准确驱动指针们转动</p>
+</blockquote>
+<p>在本教程中，我们将创建一个简单的时钟，并对其组件（Component）进行编程来显示当前时间。你不需要对Unity有足够深入的了解，只需要打开Unity编辑器操作几分钟，知道怎么控制场景（Scene）窗口，就可以开始本教程了。</p>
 <p><strong>注意</strong> 请你保证你的Unity版本在2017.1.0以上，译者使用的Unity版本为2018.2.2f1。</p>
-<p><img src="/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/tutorial-image.jpg" alt="一起做一个时钟吧"><br>———————–正在施工中———————–</p>
+<p><img src="/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/tutorial-image.jpg" alt="一起做一个时钟吧">  </p>
+<h2 id="创建时钟"><a href="#创建时钟" class="headerlink" title="创建时钟"></a>创建时钟</h2><p>打开Unity，你不需要导入额外的资源包，也不需要<a href="https://unity.com/cn/solutions/analytics" target="_blank" rel="noopener">analytics</a>，如果之前你没有对编辑器进行自定义，那么你打开的界面将会是默认布局。  </p>
+<p><img src="/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/default-layout.png" alt="默认布局">  </p>
+<p>我采用的是 2 by 3 布局，你可以通过Window-&gt;layouts-&gt;2 by 3 来使用该布局，或者点击编辑器右上角的Default下拉菜单更改成为 2 by 3 布局。同时我对布局进一步的定制，点击Project窗口右上角的下拉菜单按钮-&gt;One Column Layout，将Project窗口从双列布局（Two Column Layout）变更为单列布局（One Column Layout）使其更加适应竖排布局。我通过点击Scene窗口左上方的Gizmos-&gt;取消勾选Show Grid关闭了Scene窗口的网格。最终效果如下：  </p>
+<p><img src="/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/2-by-3.png" alt="作者自定义布局">   </p>
+<blockquote>
+<p>Q：为什么我的Game窗口非常小 并且四周被暗色的边界包裹？<br>A：使用高分屏可能会导致这种现象发生，为了解决这种问题，请尝试点击位于Game窗口上方的长宽比（aspect-ratio）下拉菜单（默认显示的是Free Aspect），取消勾选Low Resolution Aspect Ratios选项*  </p>
+</blockquote>
 
     </article>
     <!-- license  -->
@@ -557,7 +566,7 @@ top:40vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建时钟"><span class="toc-number">2.</span> <span class="toc-text">创建时钟</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -606,7 +615,7 @@ top:40vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/" >『译』Unity教程（1.1）——游戏对象和脚本</a>
+            <span class="archive-post-date">08/09</span><a class="archive-post-title" href= "/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/" >『译』Unity教程1.1 游戏对象和脚本</a>
         </li>
     
     
