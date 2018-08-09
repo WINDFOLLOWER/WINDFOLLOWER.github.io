@@ -271,7 +271,7 @@ height:40vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">499</span> / Reading time: <span class="post-count">2 min</span></span>
+                        <span>Word count: <span class="post-count">1,562</span> / Reading time: <span class="post-count">6 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -404,17 +404,41 @@ height:40vh;
 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><blockquote>
 <p>使用简单的对象来制作一个时钟<br>编写简短的C#脚本代码来使得指针绕中心轴旋转<br>并准确驱动指针们转动</p>
 </blockquote>
-<p>在本教程中，我们将创建一个简单的时钟，并对其组件（Component）进行编程来显示当前时间。你不需要对Unity有足够深入的了解，只需要打开Unity编辑器操作几分钟，知道怎么控制场景（Scene）窗口，就可以开始本教程了。</p>
+<p>在本教程中，我们将创建一个简单的时钟，并对其Component（组件）进行编程来显示当前时间。你不需要对Unity有足够深入的了解，只需要打开Unity编辑器操作几分钟，知道怎么控制Scene（场景）窗口，就可以开始本教程了。</p>
 <p><strong>注意</strong> 请你保证你的Unity版本在2017.1.0以上，译者使用的Unity版本为2018.2.2f1。</p>
 <p><img src="/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/tutorial-image.jpg" alt="一起做一个时钟吧">  </p>
 <h2 id="创建时钟"><a href="#创建时钟" class="headerlink" title="创建时钟"></a>创建时钟</h2><p>打开Unity，你不需要导入额外的资源包，也不需要<a href="https://unity.com/cn/solutions/analytics" target="_blank" rel="noopener">analytics</a>，如果之前你没有对编辑器进行自定义，那么你打开的界面将会是默认布局。  </p>
 <p><img src="/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/default-layout.png" alt="默认布局">  </p>
-<p>我采用的是 2 by 3 布局，你可以通过Window-&gt;layouts-&gt;2 by 3 来使用该布局，或者点击编辑器右上角的Default下拉菜单更改成为 2 by 3 布局。同时我对布局进一步的定制，点击Project窗口右上角的下拉菜单按钮-&gt;One Column Layout，将Project窗口从双列布局（Two Column Layout）变更为单列布局（One Column Layout）使其更加适应竖排布局。我通过点击Scene窗口左上方的Gizmos-&gt;取消勾选Show Grid关闭了Scene窗口的网格。最终效果如下：  </p>
+<p>我采用的是 2 by 3 布局，你可以通过Window-&gt;layouts-&gt;2 by 3 来使用该布局，或者点击编辑器右上角的Default下拉菜单更改成为 2 by 3 布局。同时我对布局进一步的定制，点击Project窗口右上角的下拉菜单按钮-&gt;One Column Layout，将Project窗口从Two Column Layout（双列布局）变更为One Column Layout（单列布局）使其更加适应竖排布局。我通过点击Scene窗口左上方的Gizmos-&gt;取消勾选Show Grid关闭了Scene窗口的网格。最终效果如下   </p>
 <p><img src="/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/2-by-3.png" alt="作者自定义布局">   </p>
 <blockquote>
-<p>Q：为什么我的Game窗口非常小 并且四周被暗色的边界包裹？<br>A：使用高分屏可能会导致这种现象发生，为了解决这种问题，请尝试点击位于Game窗口上方的长宽比（aspect-ratio）下拉菜单（默认显示的是Free Aspect），取消勾选Low Resolution Aspect Ratios选项*  </p>
+<p>Q：为什么我的Game窗口非常小 并且四周被暗色的边界包裹？<br>A：使用高分屏可能会导致这种现象发生，为了解决这种问题，请尝试点击位于Game窗口上方的长宽比（aspect-ratio）下拉菜单（默认显示的是Free Aspect），取消勾选Low Resolution Aspect Ratios选项。</p>
 </blockquote>
-
+<blockquote>
+<p>译者：实际上不需要和作者使用一样的布局，请选择方便自己操作的布局即可，译者还是比较喜欢默认布局。</p>
+</blockquote>
+<h3 id="建立一个Game-Object（游戏对象）"><a href="#建立一个Game-Object（游戏对象）" class="headerlink" title="建立一个Game Object（游戏对象）"></a>建立一个Game Object（游戏对象）</h3><p>在默认的scene中包含两个game object（游戏对象），你可以看到他们排列在Hierarchy（分层）窗口，同时能在Scene窗口能看到他们的小图标——一个太阳和一个摄影机。其中Main Camera（主摄像机）用于Scene的渲染，Game的画面就是Main Camera渲染出来的画面。Directional Light（定向光源）用于为场景提供光照。  </p>
+<p>我们通过GameObject-&gt;Create Empty选项创建一个自己游戏对象（或在Hierarchy窗口空白处右键-&gt;Create Empty实现，在这里可以创建大多数的对象，以后不多加以赘述）。这个新的object将会添加至默认scene中，我们将它重命名为Clock（重命名可以点中该object右键点击Rename或者点中object在Inspector（检查）窗口中更改）。  </p>
+<p><img src="/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/hierarchy.png" alt="Hierarchy窗口">  </p>
+<p>Inspector窗口包含游戏对象的详细信息，在选中我们的时钟对象后，这里将会显示一个带有包含带有对象名称的标题栏和一些配置选项，在默认情况下，该对象被启用（名称前的选择框）而且不是static（静态），不包含Tag（标记），并且属于Default Layer（默认图层）中。我们当前不需要对这些设置进行修改。这些设置的下方为该游戏对象的所有组件的列表，通常包含一个Transform component（变换组件），这是我们当前Clock对象仅有的一个component（组件）。  </p>
+<p><img src="/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/inspector.png" alt="时钟的Inspector窗口">  </p>
+<p>Transform组件中包含3维空间中对象的位置，旋转角度和缩放，请将时钟的Position（位置）和Rotation（角度）XYZ均设置为0，Scale（比例）XYZ均设置为1。</p>
+<blockquote>
+<p>Q：2D对象和3D对象在Transfrom上有什么区别？<br>A：当在2D工程中，你可以忽略三个维度中的一个。专门用于2D的对象通常具有Rect Transfrom，这是专门给2D对象的Transfrom组件。  </p>
+</blockquote>
+<h3 id="创建表盘"><a href="#创建表盘" class="headerlink" title="创建表盘"></a>创建表盘</h3><p>尽管我们有了一个时钟对象，但是我们没看到任何玩意。所以我们必须添加3D模型才能渲染出来，我们可以使用Unity基本的对象来建立一个简单的时钟，让我们通过GameObject-&gt;3D Object-&gt; Cylinder来生成一个圆柱体，<strong>请确保它的Transform组件的值和之前创建的Clock对象保持一致</strong>。  </p>
+<p><img src="/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/cylinder-inspector.png" alt="创建的圆柱体对象">  </p>
+<p>这个新的对象较之前的Clock对象多出3个组件:<br>1.<a href="https://docs.unity3d.com/Manual/class-MeshFilter.html" target="_blank" rel="noopener">Mesh Filter(网格过滤器)</a>,它从圆柱体资源获取网格并传递给Mesh Renderer。<br>2.<a href="https://docs.unity3d.com/ScriptReference/CapsuleCollider.html" target="_blank" rel="noopener">Capsule Collider（胶囊对撞机</a>，在3D物理碰撞中使用，用于碰撞检测。<br>3.<a href="https://docs.unity3d.com/Manual/class-MeshRenderer.html" target="_blank" rel="noopener">Mesh Renderer</a>，它从Mesh Filter获得几何形状并将其渲染在Transform组件指定的方位。在该组件的下方检查器中有对于用于渲染的材质的设定，如果未经修改将使用内置的默认材质。  </p>
+<p>虽然这个新建的物体是圆柱体，但是其对撞机为胶囊形状，原因是Unity没有原始的圆柱形的对撞机。在这本教程中我们并不需要使用该组件，我们可以在Capsule右侧带有齿轮图案的下拉菜单中-&gt;Remove Component 来删除它。如果你想在时钟上使用物理效果，Mesh Collider组件是更好的选择。   </p>
+<p><img src="/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/cylinder-no-collider.png" alt="删除Collider组件后">  </p>
+<p>这时候圆柱体根本不是我们认知中的样子，我们必须将其压平。将Transfrom组件中的Y分量减少至0.1。由于初始圆柱体网格高两个单位，经过变换后有效高度变为0.2个单位。紧接着修改X Z分量为10，我们的大表盘就做好了。  </p>
+<p><img src="/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/cylinder-scaled-scene.png" alt="大表盘">  </p>
+<p><img src="/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/cylinder-scaled-inspector.png" alt="大表盘的参数">  </p>
+<p>重命名这个对象，命名为Face，在Hierarchy窗口中，将Face拖动到Clock上，使得其成为Clock对象的子对象（Child Object）。  </p>
+<p><img src="/2018/08/09/Unity3d/Unity1-1/Unity教程1-1/child-object.png" alt="子对象Face">  </p>
+<p>子对象会自动接受父对象的转换，这意味着当Clock改变位置，Face也会跟着改变位置。同理对于旋转和缩放也是这样。可以使用这种方法方法来创建复杂的对象层次结构。</p>
+<hr>
+<h2 id="仍在施工中-2333-XD"><a href="#仍在施工中-2333-XD" class="headerlink" title="仍在施工中 2333 XD"></a>仍在施工中 2333 XD</h2>
     </article>
     <!-- license  -->
     
@@ -566,7 +590,7 @@ top:40vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建时钟"><span class="toc-number">2.</span> <span class="toc-text">创建时钟</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建时钟"><span class="toc-number">2.</span> <span class="toc-text">创建时钟</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#建立一个Game-Object（游戏对象）"><span class="toc-number">2.1.</span> <span class="toc-text">建立一个Game Object（游戏对象）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#创建表盘"><span class="toc-number">2.2.</span> <span class="toc-text">创建表盘</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#仍在施工中-2333-XD"><span class="toc-number">3.</span> <span class="toc-text">仍在施工中 2333 XD</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
