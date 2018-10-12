@@ -15,7 +15,7 @@
     <meta name="description" content="">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Wecome To Windy Town · Windy Town</title>
+    <title>Android个人复习讲义(1)-LBS定位技术 · Windy Town</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -210,7 +210,7 @@
                 <a href="/" >Windy Town</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">Wecome To Windy Town</a>
+                <a href="#" class="post-name">Android个人复习讲义(1)-LBS定位技术</a>
             </div>
     </div>
     
@@ -242,7 +242,7 @@ height:40vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            Wecome To Windy Town
+            Android个人复习讲义(1)-LBS定位技术
             <!-- 404 -->
             
         </h1>
@@ -259,14 +259,20 @@ height:40vh;
             <div class="post-intros">
                 <!-- 文章页标签  -->
                 
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Android">Android</a>
+    
+</div>
+                
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">79</span> / Reading time: <span class="post-count">1 min</span></span>
+                        <span>Word count: <span class="post-count">1,306</span> / Reading time: <span class="post-count">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2018/08/08</span>
+                    <span class="post-intro-time">2018/10/13</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -390,17 +396,27 @@ height:40vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h3 id="欢迎各位来访"><a href="#欢迎各位来访" class="headerlink" title="欢迎各位来访!"></a>欢迎各位来访!</h3><p>这里是Wind_07<br>以后会在这里写相关的博客   </p>
-<p>关于我<br>你可以访问这个站点<a href="https://windfollower.github.io/about/">About Me</a><br>写的不是很好  请各位多多指教  </p>
-<p>本博客的内容欢迎转载<br>请在醒目的地方标明出处<br>商业用途请与我联系</p>
+        <p><strong>写这个博客的原因是最近写个小程序,发现之前学过的玩意都忘了,自己看了自己几个月之前写的Android代码,有种”啊这种玩意是我写的吗”的感觉,为了避免打水漂所以决定对几个关键而且常用的点进行复习,顺便嘛,提高一下我那个只有可怜51wpm的打字速度.最后如果有机会的话可以把那个小程序给码完(Flag高高立起)</strong><br>本篇主要讲的是LBS,我采用的是高德地图的SDK,我们今天要达到的目标主要是获取当地的经纬度和位置信息,完成这个就ok啦!<br>首先使用高德的定位服务需要注册为高德的开发者,网站:<a href="https://lbs.amap.com/" target="_blank" rel="noopener">高德开发者网址</a><br>然后我们打开自己的个人中心,点击我的应用-&gt;创建新应用.<br><img src="/2018/10/13/Android 01/Android重难点复习01/申请KEY.png" alt=""><br>在这里我们需要填写自己的程序的各种信息,具体的安全码和PackageName获取方法上面都给你了,具体可以查看他们给你的教程.这里填写的相关的东西务一定不要出错,如果填错的话和你的应用信息不一致将不会传回位置信息.<br><img src="/2018/10/13/Android 01/Android重难点复习01/申请KEY02.png" alt="">    </p>
+<h3 id="配置工程"><a href="#配置工程" class="headerlink" title="配置工程"></a>配置工程</h3><p>在工程中配置高德SDK官方也有相应的教程:<a href="https://lbs.amap.com/api/android-location-sdk/guide/create-project/android-studio-create-project" target="_blank" rel="noopener">官方配置工程教程</a>,我这里推荐的是使用Gradle集成SDK(都8012年了还手动导入jar包),打开下图工程中的build.gradle文件<br><img src="/2018/10/13/Android 01/Android重难点复习01/Gradle位置.png" alt=""><br>在build.gradle文件的dependencies的括号内需要根据我们的需要引入对应的代码<br>|SDK|引入代码|<br>|——|——|<br>|3D地图|implementation ‘com.amap.api:3dmap:latest.integration’|<br>|2D地图|implementation ‘com.amap.api:map2d:latest.integration’|<br>|导航|implementation ‘com.amap.api:navi-3dmap:latest.integration’|<br>|搜索|implementation ‘com.amap.api:search:latest.integration’|<br>|定位|implementation ‘com.amap.api:location:latest.integration’|    </p>
+<blockquote>
+<p>这里与官方唯一的区别在于使用的是implementation而非compile,原因在于3.0以上的AS中compile被标为过时.具体可以参考这篇文章<a href="https://blog.csdn.net/soslinken/article/details/73114637" target="_blank" rel="noopener">android gradle tools 3.X 中依赖，implement、api 指令</a>   </p>
+</blockquote>
+<p>由于今天我们要使用的只有定位只需要加入表中最后一项就行,当然你全加了也没没啥问题.然后点击AS代码框上方的Sync Now蓝色字AS就会自动下载并导入相关的jar包,到此为止配置已完成 </p>
+<h3 id="声明服务和配置KEY"><a href="#声明服务和配置KEY" class="headerlink" title="声明服务和配置KEY"></a>声明服务和配置KEY</h3><p>我之前常常忘记了声明服务这一点,没了这项程序根本就得不到数据<br>在AndroidManifest.xml文件发application代码块中加入如下代码即可获得app对应的服务<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;service android:name=&quot;com.amap.api.location.APSService&quot;&gt;&lt;/service&gt;</span><br></pre></td></tr></table></figure></p>
+<p>然后这串代码后加上后面这串代码来配置自己申请到的key(申请完就能看到)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;meta-data</span><br><span class="line">    android:name=&quot;com.amap.api.v2.apikey&quot;</span><br><span class="line">    android:value=&quot;开发者申请的key&quot;&gt;</span><br><span class="line">&lt;/meta-data&gt;</span><br></pre></td></tr></table></figure></p>
+<p>最后你的application代码块应该是这样(省略了部分代码)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;application</span><br><span class="line">    ......&gt;</span><br><span class="line">    &lt;activity android:name=&quot;.MainActivity&quot;&gt;</span><br><span class="line">        ......</span><br><span class="line">    &lt;/activity&gt;</span><br><span class="line">    &lt;service android:name=&quot;com.amap.api.location.APSService&quot;&gt;&lt;/service&gt;</span><br><span class="line">    &lt;meta-data</span><br><span class="line">        android:name=&quot;com.amap.api.v2.apikey&quot;</span><br><span class="line">        android:value=&quot;开发者申请的key&quot;&gt;</span><br><span class="line">    &lt;/meta-data&gt;</span><br><span class="line">&lt;/application&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="请求权限"><a href="#请求权限" class="headerlink" title="请求权限"></a>请求权限</h3><p>为了进一步保护用户的手机安全,6.0以后权限的请求更加严格,具体可以参考这篇博客<a href="https://blog.csdn.net/KjunChen/article/details/51366845" target="_blank" rel="noopener">Android 6.0开始动态请求权限</a>,我们的手机权限分为正常权限和敏感权限,正常权限只需要在工程中AndroidManifest.xml文件的manifest代码块中加入类似的这样的代码即可获得权限(当然别写在application代码块中)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;</span><br></pre></td></tr></table></figure></p>
+<p>而敏感权限不仅需要和正常权限在manifest中声明,还需要动态请求才能正式获得权限.<br>为了定位程序正常运行,我们要在manifest代码块将所有需要的权限都声明一遍<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--用于进行网络定位--&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_COARSE_LOCATION&quot;&gt;&lt;/uses-permission&gt;</span><br><span class="line">&lt;!--用于访问GPS定位--&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_FINE_LOCATION&quot;&gt;&lt;/uses-permission&gt;</span><br><span class="line">&lt;!--用于获取运营商信息，用于支持提供运营商信息相关的接口--&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_NETWORK_STATE&quot;&gt;&lt;/uses-permission&gt;</span><br><span class="line">&lt;!--用于访问wifi网络信息，wifi信息会用于进行网络定位--&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_WIFI_STATE&quot;&gt;&lt;/uses-permission&gt;</span><br><span class="line">&lt;!--用于获取wifi的获取权限，wifi信息会用来进行网络定位--&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.CHANGE_WIFI_STATE&quot;&gt;&lt;/uses-permission&gt;</span><br><span class="line">&lt;!--用于访问网络，网络定位需要上网--&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot;&gt;&lt;/uses-permission&gt;</span><br><span class="line">&lt;!--用于读取手机当前的状态--&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.READ_PHONE_STATE&quot;&gt;&lt;/uses-permission&gt;</span><br><span class="line">&lt;!--用于写入缓存数据到扩展存储卡--&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;&gt;&lt;/uses-permission&gt;</span><br><span class="line">&lt;!--用于申请调用A-GPS模块--&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.ACCESS_LOCATION_EXTRA_COMMANDS&quot;&gt;&lt;/uses-permission&gt;</span><br><span class="line">&lt;!--用于申请获取蓝牙信息进行室内定位--&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.BLUETOOTH&quot;&gt;&lt;/uses-permission&gt;</span><br><span class="line">&lt;uses-permission android:name=&quot;android.permission.BLUETOOTH_ADMIN&quot;&gt;&lt;/uses-permission&gt;</span><br></pre></td></tr></table></figure></p>
+<p>这是<a href="https://lbs.amap.com/api/android-location-sdk/guide/android-location/getlocation" target="_blank" rel="noopener">官方给的权限代码</a>实际上定位不需要这么多,可以去掉蓝牙什么的权限<br>然后我们对敏感权限进行动态申请  </p>
+<p>———-未完成———-</p>
 
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>原文作者: <a href="https://windfollower.github.io">Wind_07</a>
-            <p>原文链接: <a href="https://windfollower.github.io/2018/08/08/Wecome/wecome/">https://windfollower.github.io/2018/08/08/Wecome/wecome/</a>
-            <p>发表日期: <a href="https://windfollower.github.io/2018/08/08/Wecome/wecome/">August 8th 2018, 4:21:37 pm</a>
+            <p>原文链接: <a href="https://windfollower.github.io/2018/10/13/Android 01/Android重难点复习01/">https://windfollower.github.io/2018/10/13/Android 01/Android重难点复习01/</a>
+            <p>发表日期: <a href="https://windfollower.github.io/2018/10/13/Android 01/Android重难点复习01/">October 13th 2018, 12:08:36 am</a>
             <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -408,13 +424,13 @@ height:40vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/2018/10/13/Android 01/Android重难点复习01/" title= Android个人复习讲义(1)-LBS定位技术 >
-                    <div class="nextTitle">Android个人复习讲义(1)-LBS定位技术</div>
-                </a>
-            
         </li>
         <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/08/08/Wecome/wecome/" title= Wecome To Windy Town >
+                    <div class="prevTitle">Wecome To Windy Town</div>
+                </a>
             
         </li>
     </ul>
@@ -545,7 +561,7 @@ top:40vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#欢迎各位来访"><span class="toc-number">1.</span> <span class="toc-text">欢迎各位来访!</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#配置工程"><span class="toc-number">1.</span> <span class="toc-text">配置工程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#声明服务和配置KEY"><span class="toc-number">2.</span> <span class="toc-text">声明服务和配置KEY</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#请求权限"><span class="toc-number">3.</span> <span class="toc-text">请求权限</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
