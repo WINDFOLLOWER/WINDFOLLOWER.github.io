@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Wind_07">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Wind_07">
+    <meta name="keywords" content="Wind_07 | Wind_07">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Android复习01-LBS定位技术 · Windy Town</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180721 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180721 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Windy Town</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Android复习01-LBS定位技术</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Windy Town</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:40vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Android复习01-LBS定位技术
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "Android">Android</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">2,346</span> / Reading time: <span class="post-count">10 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/10/13</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p><strong>写这个博客的原因是最近写个小程序,发现之前学过的玩意都忘了,自己看了自己几个月之前写的Android代码,有种&quot;啊这种玩意是我写的吗&quot;的感觉,为了避免打水漂所以决定对几个关键而且常用的点进行复习,顺便嘛,提高一下我那个只有可怜51wpm的打字速度.最后如果有机会的话可以把那个小程序给码完(Flag高高立起)</strong><br>
+本篇主要讲的是LBS,我采用的是高德地图的SDK,我们今天要达到的目标主要是获取当地的经纬度和位置信息,完成这个就ok啦!<br>
+首先使用高德的定位服务需要注册为高德的开发者,网站:<a href="https://lbs.amap.com/" target="_blank" rel="noopener">高德开发者网址</a><br>
+然后我们打开自己的个人中心,点击我的应用-&gt;创建新应用.
+<img src="/2018/10/13/Android 01/Android01/%E7%94%B3%E8%AF%B7KEY.png" alt=""><br>
+在这里我们需要填写自己的程序的各种信息,具体的安全码和PackageName获取方法上面都给你了,具体可以查看他们给你的教程.这里填写的相关的东西务一定不要出错,如果填错的话和你的应用信息不一致将不会传回位置信息.
+<img src="/2018/10/13/Android 01/Android01/%E7%94%B3%E8%AF%B7KEY02.png" alt=""></p>
+<h3>配置工程</h3>
+<p>在工程中配置高德SDK官方也有相应的教程:<a href="https://lbs.amap.com/api/android-location-sdk/guide/create-project/android-studio-create-project" target="_blank" rel="noopener">官方配置工程教程</a>,我这里推荐的是使用Gradle集成SDK(都8012年了还手动导入jar包),打开下图工程中的build.gradle文件<br>
+<img src="/2018/10/13/Android 01/Android01/Gradle%E4%BD%8D%E7%BD%AE.png" alt=""><br>
+在build.gradle文件的dependencies的括号内需要根据我们的需要引入对应的代码</p>
+<table>
+<thead>
+<tr>
+<th>SDK</th>
+<th>引入代码</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>3D地图</td>
+<td>implementation 'com.amap.api:3dmap:latest.integration'</td>
+</tr>
+<tr>
+<td>2D地图</td>
+<td>implementation 'com.amap.api:map2d:latest.integration'</td>
+</tr>
+<tr>
+<td>导航</td>
+<td>implementation 'com.amap.api:navi-3dmap:latest.integration'</td>
+</tr>
+<tr>
+<td>搜索</td>
+<td>implementation 'com.amap.api:search:latest.integration'</td>
+</tr>
+<tr>
+<td>定位</td>
+<td>implementation 'com.amap.api:location:latest.integration'</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>这里与官方唯一的区别在于使用的是implementation而非compile,原因在于3.0以上的AS中compile被标为过时.具体可以参考这篇文章<a href="https://blog.csdn.net/soslinken/article/details/73114637" target="_blank" rel="noopener">android gradle tools 3.X 中依赖，implement、api 指令</a></p>
+</blockquote>
+<p>由于今天我们要使用的只有定位只需要加入表中最后一项就行,当然你全加了也没没啥问题.然后点击AS代码框上方的Sync Now蓝色字AS就会自动下载并导入相关的jar包,到此为止配置已完成</p>
+<h3>声明服务和配置KEY</h3>
+<p>我之前常常忘记了声明服务这一点,没了这项程序根本就得不到数据<br>
+在AndroidManifest.xml文件发application代码块中加入如下代码即可获得app对应的服务
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">service</span> <span class="attr">android:name</span>=<span class="string">"com.amap.api.location.APSService"</span>&gt;</span><span class="tag">&lt;/<span class="name">service</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>然后这串代码后加上后面这串代码来配置自己申请到的key(申请完就能看到)<br>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta-data</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:name</span>=<span class="string">"com.amap.api.v2.apikey"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:value</span>=<span class="string">"开发者申请的key"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">meta-data</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>最后你的application代码块应该是这样(省略了部分代码)
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">application</span></span></span><br><span class="line"><span class="tag">    <span class="attr">......</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">activity</span> <span class="attr">android:name</span>=<span class="string">".MainActivity"</span>&gt;</span></span><br><span class="line">        ......</span><br><span class="line">    <span class="tag">&lt;/<span class="name">activity</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">service</span> <span class="attr">android:name</span>=<span class="string">"com.amap.api.location.APSService"</span>&gt;</span><span class="tag">&lt;/<span class="name">service</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta-data</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:name</span>=<span class="string">"com.amap.api.v2.apikey"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:value</span>=<span class="string">"开发者申请的key"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">meta-data</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">application</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<h3>请求权限</h3>
+<p>为了进一步保护用户的手机安全,6.0以后权限的请求更加严格,具体可以参考这篇博客<a href="https://blog.csdn.net/KjunChen/article/details/51366845" target="_blank" rel="noopener">Android 6.0开始动态请求权限</a>,我们的手机权限分为正常权限和敏感权限,正常权限只需要在工程中AndroidManifest.xml文件的manifest代码块中加入类似的这样的代码即可获得权限(当然别写在application代码块中)
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; /&gt;</span><br></pre></td></tr></table></figure></p>
+<p>而敏感权限不仅需要和正常权限在manifest中声明,还需要动态请求才能正式获得权限.
+为了定位程序正常运行,我们要在manifest代码块将所有需要的权限都声明一遍
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--用于进行网络定位--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_COARSE_LOCATION"</span>&gt;</span><span class="tag">&lt;/<span class="name">uses-permission</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--用于访问GPS定位--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_FINE_LOCATION"</span>&gt;</span><span class="tag">&lt;/<span class="name">uses-permission</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--用于获取运营商信息，用于支持提供运营商信息相关的接口--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_NETWORK_STATE"</span>&gt;</span><span class="tag">&lt;/<span class="name">uses-permission</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--用于访问wifi网络信息，wifi信息会用于进行网络定位--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_WIFI_STATE"</span>&gt;</span><span class="tag">&lt;/<span class="name">uses-permission</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--用于获取wifi的获取权限，wifi信息会用来进行网络定位--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.CHANGE_WIFI_STATE"</span>&gt;</span><span class="tag">&lt;/<span class="name">uses-permission</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--用于访问网络，网络定位需要上网--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.INTERNET"</span>&gt;</span><span class="tag">&lt;/<span class="name">uses-permission</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--用于读取手机当前的状态--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.READ_PHONE_STATE"</span>&gt;</span><span class="tag">&lt;/<span class="name">uses-permission</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--用于写入缓存数据到扩展存储卡--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.WRITE_EXTERNAL_STORAGE"</span>&gt;</span><span class="tag">&lt;/<span class="name">uses-permission</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--用于申请调用A-GPS模块--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"</span>&gt;</span><span class="tag">&lt;/<span class="name">uses-permission</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!--用于申请获取蓝牙信息进行室内定位--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.BLUETOOTH"</span>&gt;</span><span class="tag">&lt;/<span class="name">uses-permission</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">uses-permission</span> <span class="attr">android:name</span>=<span class="string">"android.permission.BLUETOOTH_ADMIN"</span>&gt;</span><span class="tag">&lt;/<span class="name">uses-permission</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>这是<a href="https://lbs.amap.com/api/android-location-sdk/guide/android-location/getlocation" target="_blank" rel="noopener">官方给的权限代码</a>实际上定位不需要这么多,可以去掉蓝牙什么的权限<br>
+然后我们对敏感权限进行动态申请<br>
+在MianActivity的onCreate中加入如下代码<br>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//我们需要一个ArrayList来存储我们请求的权限</span></span><br><span class="line">List&lt;String&gt; permissionList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"><span class="comment">//检查位置权限,如果用户没有授权则将该权限加入list</span></span><br><span class="line"><span class="keyword">if</span> (ContextCompat.checkSelfPermission(MainActivity.<span class="keyword">this</span> Manifest.permission.    </span><br><span class="line">        ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) &#123;</span><br><span class="line">    permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//同理检查获取手机状态权限</span></span><br><span class="line"><span class="keyword">if</span> (ContextCompat.checkSelfPermission(MainActivity.<span class="keyword">this</span>, Manifest.permission.</span><br><span class="line">        READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) &#123;</span><br><span class="line">    permissionList.add(Manifest.permission.READ_PHONE_STATE);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//同理检查存储权限</span></span><br><span class="line"><span class="keyword">if</span> (ContextCompat.checkSelfPermission(MainActivity.<span class="keyword">this</span>, Manifest.permission.</span><br><span class="line">        WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) &#123;</span><br><span class="line">    permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);</span><br><span class="line"><span class="comment">//请求List中的权限,当然如果list为空就不用进行请求</span></span><br><span class="line"><span class="keyword">if</span> (!permissionList.isEmpty()) &#123;</span><br><span class="line">    String[] permissions = permissionList.toArray(<span class="keyword">new</span> String[permissionList.size()]);</span><br><span class="line">    <span class="comment">//第二个参数是请求码,后续在请求权限响应会用到</span></span><br><span class="line">    ActivityCompat.requestPermissions(MainActivity.<span class="keyword">this</span>, permissions, <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当然了,你请求了权限,用户又不会好心地把你的权限全部给你,如果用户拒绝你的权限你必须告诉他有什么后果,所以必须对请求权限结果有相应的响应所以应该在MainActivity中加入如下代码来对请求结果进行响应</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onRequestPermissionsResult</span><span class="params">(<span class="keyword">int</span> requestCode, String[] permissions, <span class="keyword">int</span>[] grantResults)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//requestCode之前标明为1,如果收到的请求码为1就进行处理</span></span><br><span class="line">    <span class="keyword">switch</span> (requestCode) &#123;</span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">            <span class="keyword">if</span> (grantResults.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">//检查每一项是否被授权</span></span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> result : grantResults) &#123;</span><br><span class="line">                    <span class="keyword">if</span> (result != PackageManager.PERMISSION_GRANTED) &#123;</span><br><span class="line">                        Toast.makeText(<span class="keyword">this</span>,<span class="string">"必须所有权限才能使用"</span>, Toast.LENGTH_SHORT).show();</span><br><span class="line">                        <span class="comment">//无情退出2333</span></span><br><span class="line">                        finish();</span><br><span class="line">                        <span class="keyword">return</span>;</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">//如果没有无情退出就请求位置,这个函数后续再写</span></span><br><span class="line">                    requestLocation();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:<span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当然了如果用户不是第一次打开这个软件并且已经全部授权过敏感权限,那么就没响应什么事,那个requestLocation();就不会执行,so,我们需要在识别到所有的权限都被授权的时候直接requestLocation();所以在onCreate()中补全代码</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!permissionList.isEmpty()) &#123;</span><br><span class="line">    String[] permissions = permissionList.toArray(<span class="keyword">new</span> String[permissionList.size()]);</span><br><span class="line">    ActivityCompat.requestPermissions(MainActivity.<span class="keyword">this</span>, permissions, <span class="number">1</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">//直接请求</span></span><br><span class="line">    requestLocation();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3>请求位置</h3>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//首先声明一个public的Client</span></span><br><span class="line"><span class="comment">//我们需要使用其startLocation开始定位</span></span><br><span class="line"><span class="comment">//在开始定位前需要对其进行设定</span></span><br><span class="line"><span class="keyword">public</span> AMapLocationClient mLocationClient = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">requestLocation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    initMap(getApplicationContext());<span class="comment">//初始化</span></span><br><span class="line">    mLocationClient.startLocation();<span class="comment">//开始定位</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中初始化initMap</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initMap</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">    mLocationClient = <span class="keyword">new</span> AMapLocationClient(context);<span class="comment">//实例化Client</span></span><br><span class="line">    <span class="comment">//实例化Option,来设置定位</span></span><br><span class="line">    mLocationClient.setLocationListener(<span class="keyword">new</span> mLocationListener());</span><br><span class="line">    AMapLocationClientOption mLocationOption = <span class="keyword">new</span> AMapLocationClientOption();</span><br><span class="line">    <span class="comment">//设置定位模式为高精度</span></span><br><span class="line">    mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode   </span><br><span class="line">        .Hight_Accuracy);</span><br><span class="line">    <span class="comment">//是否返回地址信息</span></span><br><span class="line">    mLocationOption.setNeedAddress(<span class="keyword">true</span>);</span><br><span class="line">    <span class="comment">//设置Option,通过Option传入各项设置</span></span><br><span class="line">    mLocationClient.setLocationOption(mLocationOption);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>到这里我们初始化也完成了,然后呢?<br>
+我们的数据跑哪里去了?,这时候高德给了我们一个接口我们可以通过这个接口来获得相关的信息,在我们开始之前我们需要搞定一个textView<br>
+main_activity.xml</p>
+<p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">LinearLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:orientation</span>=<span class="string">"vertical"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"hi"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/the_text"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>MainActivity.java</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainActiviy</span> <span class="keyword">extends</span> <span class="title">Activity</span> </span>&#123;</span><br><span class="line">    TextView textView = <span class="keyword">null</span>; </span><br><span class="line">    ...</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onCreate</span><span class="params">(Bundle savedInstanceState)</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        textView = (TextView) findViewById(R.id.the_text);</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>搞定了textView我们就来获取信息并显示在textView</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">mLocationListener</span> <span class="keyword">implements</span> <span class="title">AMapLocationListener</span></span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onLocationChanged</span><span class="params">(<span class="keyword">final</span> AMapLocation amapLocation)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//StringBuilder来形成长串的String</span></span><br><span class="line">        StringBuilder currentPosition = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">        <span class="comment">//获取城市信息,并写入StringBuilder后面同理</span></span><br><span class="line">        currentPosition.append(<span class="string">"城市: "</span>).append(amapLocation.getCity()).append(<span class="string">"\n"</span>);</span><br><span class="line">        <span class="comment">//获取经度信息</span></span><br><span class="line">        currentPosition.append(<span class="string">"经度: "</span>).append(amapLocation.getLatitude()).append(<span class="string">"\n"</span>);</span><br><span class="line">        <span class="comment">//获取纬度信息</span></span><br><span class="line">        currentPosition.append(<span class="string">"纬度: "</span>).append(amapLocation.getLongitude()).append(<span class="string">"\n"</span>);</span><br><span class="line">        <span class="comment">//获取定位方式</span></span><br><span class="line">        currentPosition.append(amapLocation.getLocationType());</span><br><span class="line">        textView.setText(currentPosition);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>哦很好那就完成了,但现在我们别忘记取消定位服务</p>
+<p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDestroy</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onDestroy();</span><br><span class="line">    mLocationClient.stopLocation();</span><br><span class="line">    mLocationClient.onDestroy();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从此大功告成<br>
+看一下效果<br>
+<img src="/2018/10/13/Android 01/Android01/%E6%95%88%E6%9E%9C.png" alt="效果"><br>
+当然坐标是乱给的城市也显示不出来<br>
+好吧就这样吧<br>
+代码照上面ctrlc+ctrlv就能搞定就不传到GitHub了<br>
+下次见 XD</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="https://windfollower.github.io">Wind_07</a>
+            <p>原文链接: <a href="https://windfollower.github.io/2018/10/13/Android 01/Android01/">https://windfollower.github.io/2018/10/13/Android 01/Android01/</a>
+            <p>发表日期: <a href="https://windfollower.github.io/2018/10/13/Android 01/Android01/">October 13th 2018, 2:58:00 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/08/08/Wecome/wecome/" title= Wecome To Windy Town >
+                    <div class="prevTitle">Wecome To Windy Town</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+    <div id="lv-container" data-id="city" data-uid= MTAyMC8zODcyMy8xNTI1MQ==>
+        <script type="text/javascript">
+            (function (d, s) {
+                var j, e = d.getElementsByTagName(s)[0];
+                if (typeof LivereTower === 'function') { return; }
+                j = d.createElement(s);
+                j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                j.async = true;
+
+                e.parentNode.insertBefore(j, e);
+            })(document, 'script');
+        </script>
+        <noscript>为正常使用来必力评论功能请激活JavaScript</noscript>
+    </div>
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:sunchen5575@126.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/WINDFOLLOWER" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.zhihu.com/people/Wind07/" class="iconfont-archer zhihu" target="_blank" title=zhihu></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://space.bilibili.com/33046563/" class="iconfont-archer bilibili" target="_blank" title=bilibili></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:40vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">配置工程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">声明服务和配置KEY</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">请求权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">请求位置</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 2
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/13</span><a class="archive-post-title" href= "/2018/10/13/Android 01/Android01/" >Android复习01-LBS定位技术</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/08</span><a class="archive-post-title" href= "/2018/08/08/Wecome/wecome/" >Wecome To Windy Town</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="Android"><span class="iconfont-archer">&#xe606;</span>Android</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="Android个人复习讲义"><span class="iconfont-archer">&#xe60a;</span>Android个人复习讲义</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Wind_07"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
